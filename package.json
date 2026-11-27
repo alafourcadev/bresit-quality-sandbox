@@ -1,0 +1,11 @@
+{
+  "name": "bresit-quality-sandbox",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Sandbox project used to verify Bresit Quality OS integrations with real GitHub events and GitHub Actions runs.",
+  "scripts": {
+    "test": "node --test",
+    "test:ci": "mkdir -p reports && node --test --experimental-test-coverage --test-reporter=junit --test-reporter-destination=reports/junit.xml --test-reporter=lcov --test-reporter-destination=reports/lcov.info --test-reporter=spec --test-reporter-destination=stdout"
+  }
+}

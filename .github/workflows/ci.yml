@@ -1,0 +1,47 @@
+# Reports this repository's tests and coverage to Bresit Quality OS and lets its quality gate block the build.
+# Setup: secret BRESIT_QUALITY_TOKEN (ingestion token), variable BRESIT_QUALITY_SERVER (Bresit URL).
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+env:
+  BRESIT_QUALITY_SERVER: ${{ vars.BRESIT_QUALITY_SERVER }}
+  BRESIT_QUALITY_TOKEN: ${{ secrets.BRESIT_QUALITY_TOKEN }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Quality CLI
+        run: curl -fsSL "$BRESIT_QUALITY_SERVER/api/v1/cli/quality.mjs" -o "$RUNNER_TEMP/quality.mjs"
+
+      - name: Quality pipeline start
+        run: node "$RUNNER_TEMP/quality.mjs" pipeline start
+
+      - name: Tests with coverage
+        run: npm run test:ci
+
+      - name: Quality upload tests and coverage
+        if: ${{ always() }}
+        run: |
+          node "$RUNNER_TEMP/quality.mjs" upload tests
+          node "$RUNNER_TEMP/quality.mjs" upload coverage
+
+      - name: Quality gate (blocking)
+        if: ${{ always() }}
+        run: node "$RUNNER_TEMP/quality.mjs" gate check --wait --timeout 120
+
+      - name: Quality pipeline finish
+        if: ${{ always() }}
+        run: node "$RUNNER_TEMP/quality.mjs" pipeline finish --status "${{ job.status }}"

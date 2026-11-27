@@ -1,0 +1,7 @@
+{
+  "project": "quality-sandbox",
+  "pipeline": "ci",
+  "environment": "ci",
+  "tests": [{ "glob": "reports/junit.xml", "suite": "unit", "format": "junit" }],
+  "coverage": [{ "glob": "reports/lcov.info", "format": "lcov" }]
+}
