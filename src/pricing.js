@@ -17,3 +17,11 @@ export function shipping(totalCents) {
   if (totalCents >= 50_000) return 0;
   return 1_500;
 }
+
+/** Bulk discount percentage for a quantity: 5 % from 10 units, 10 % from 50 units. */
+export function bulkDiscountPercent(quantity) {
+  if (!Number.isInteger(quantity) || quantity < 1) throw new RangeError("quantity must be a positive integer");
+  if (quantity >= 50) return 10;
+  if (quantity >= 10) return 5;
+  return 0;
+}
