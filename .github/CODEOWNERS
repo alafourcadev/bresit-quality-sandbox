@@ -1,0 +1,3 @@
+# The quality gate lives in these files: changing them needs the owner.
+/.github/ @alafourcadev
+/.bresit-quality.json @alafourcadev
