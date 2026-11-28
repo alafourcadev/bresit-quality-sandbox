@@ -17,3 +17,12 @@ export function shipping(totalCents) {
   if (totalCents >= 50_000) return 0;
   return 1_500;
 }
+
+/** Loyalty discount percentage by membership tier (no tests yet). */
+export function loyaltyDiscount(tier) {
+  if (tier === "gold") return 10;
+  if (tier === "silver") return 5;
+  if (tier === "bronze") return 2;
+  if (tier === "staff") return 30;
+  return 0;
+}
